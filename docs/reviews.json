@@ -1,7 +1,5 @@
 {
-  "name": "",
-  "rating": 0,
-  "user_ratings_total": 0,
-  "reviews": [],
-  "url": ""
+   "error_message" : "You must use an API key to authenticate each request to Google Maps Platform APIs. For additional information, please refer to http://g.co/dev/maps-no-account",
+   "html_attributions" : [],
+   "status" : "REQUEST_DENIED"
 }
