@@ -1,0 +1,33 @@
+name: Update Google Reviews
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  update-reviews:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch reviews from Google Places API
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          PLACE_ID: ${{ vars.GOOGLE_PLACE_ID }}
+        run: |
+          mkdir -p docs
+          curl -sS "https://maps.googleapis.com/maps/api/place/details/json?place_id=${PLACE_ID}&fields=name,rating,user_ratings_total,reviews,url&key=${GOOGLE_API_KEY}&language=pt-BR" -o docs/reviews.json
+          cat docs/reviews.json
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/reviews.json
+          git diff --staged --quiet || git commit -m "chore: atualizar avaliacoes do Google"
+          git push
